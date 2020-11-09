@@ -14,9 +14,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.ExampleMatcher
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/api/v1/service-template")
@@ -43,20 +45,21 @@ class DeliveryScheduleCrudController(private val service: DeliveryScheduleCrudSe
         ApiResponse(responseCode = "404", description = "Did not find any BaseModel", content = [Content()])]
     )
     @RequestMapping(value = ["/model"], method = [RequestMethod.GET], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getBaseModel(): ResponseEntity<ServiceResponse> {
+    fun getBaseModel(@RequestParam() storeNumber:Long?, @RequestParam(required = false) deliveryStreamNumber:Int?): ResponseEntity<ServiceResponse> {
         logger.info("Inside Base Controller")
         telemetryClient.trackEvent("URI /model is triggered");
+        print(storeNumber)
+        print(deliveryStreamNumber)
         return ResponseEntity.ok(ServiceResponse("200",
-                "SUCCESS", service.getAll()))
+                "SUCCESS", service.getbyquery(storeNumber,deliveryStreamNumber)))
     }
 
-    /**
-     * This is a sample of the POST Endpoint
-     */
     @RequestMapping(value = ["/model"], method = [RequestMethod.POST], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun saveModel(@RequestBody baseModel: deliveryScheduleModel): ResponseEntity<ServiceResponse>? {
         println(baseModel)
         service.saveSchedule(baseModel)
+
+
         return ResponseEntity.ok(ServiceResponse("200",
                 "SUCCESS", "Data Successfully Inserted"))
 

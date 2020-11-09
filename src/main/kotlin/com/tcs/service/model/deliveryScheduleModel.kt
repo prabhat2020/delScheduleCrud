@@ -8,18 +8,24 @@ import javax.annotation.Generated
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
+import javax.persistence.NamedQuery
 
 @Document(collection = "delivery-schedule")
+@NamedQuery(name="deliveryScheduleModel.findByStoreNumberAndDeliveryStreamNumber",
+        query="SELECT * FROM delivery-schedule  WHERE (:storenum is null or c. storeNumber= :storenum) AND (:delstreamnum is null or c.deliveryStreamNumber= :delstreamnum))")
 data class deliveryScheduleModel(
-      //  @Id @Generated(strategy = GenerationType.AUTO) val id: Int,
 
-        @PartitionKey  @GeneratedValue val id: String,
-        val storeNumber: Long,
-        val deliveryStreamNumber: Int,
-        val deliveryStreamName: String,
-        val schemaName: String,
-        val deliverySchemaType: Int,
-        val startDate: String,
-        val endDate: String,
-        val notes: String
+
+          val id: String?,
+        val storeNumber: Long?,
+        val deliveryStreamNumber: Int?,
+        val deliveryStreamName: String?,
+        val schemaName: String?,
+        val deliverySchemaType: Int?,
+        val startDate: String?,
+        val endDate: String?,
+        val notes: String?,
+           val _rid : String?,
+           var timetablelist:List<Timetable>?
+
 )
